@@ -2,7 +2,7 @@ import React from 'react';
 import { 
   View, 
   Text, 
-  Image, 
+  Image,
   TouchableOpacity, 
   StyleSheet, 
   ActivityIndicator, 
@@ -107,7 +107,8 @@ export function WishlistItem({
       >
         <Image 
           source={{ uri: item.product.image_urls[0] }} 
-          style={styles.listItemImage} 
+          style={styles.listItemImage}
+          resizeMode="cover"
         />
         <View style={styles.listItemInfo}>
           <Text style={styles.listItemName}>{item.product.name}</Text>

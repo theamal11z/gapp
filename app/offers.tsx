@@ -3,7 +3,6 @@ import {
   View, 
   Text, 
   ScrollView, 
-  Image, 
   TouchableOpacity, 
   StyleSheet, 
   Dimensions, 
@@ -15,6 +14,8 @@ import {
   StatusBar,
   SafeAreaView
 } from 'react-native';
+import FastImageLoader from '@/components/FastImageLoader';
+import { preloadImages } from '@/utils/imageOptimizer';
 import { 
   ChevronLeft, 
   Tag, 
@@ -27,6 +28,7 @@ import {
 } from 'lucide-react-native';
 import { router } from 'expo-router';
 import { useProducts } from '@/hooks/useProducts';
+import OptimizedImage from '@/components/OptimizedImage';
 import { useCart } from '@/hooks/useCart';
 import { useOffers } from '@/hooks/useOffers';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
@@ -127,6 +129,29 @@ export default function OffersScreen() {
       setDiscountedProducts(filtered);
     }
   }, [products]);
+  
+  // Preload images for faster display
+  useEffect(() => {
+    // Preload offer images
+    if (promoOffers && promoOffers.length > 0) {
+      const offerImages = promoOffers
+        .slice(0, 3) // Only preload first 3 offers
+        .map(offer => offer.image_url)
+        .filter(Boolean) as string[];
+      
+      preloadImages(offerImages);
+    }
+    
+    // Preload discounted product images
+    if (discountedProducts && discountedProducts.length > 0) {
+      const productImages = discountedProducts
+        .slice(0, 6) // Only preload first 6 products
+        .map(product => product.image_urls?.[0])
+        .filter(Boolean) as string[];
+      
+      preloadImages(productImages);
+    }
+  }, [promoOffers, discountedProducts]);
 
   // Refresh function
   const onRefresh = async () => {
@@ -212,9 +237,13 @@ export default function OffersScreen() {
                   style={styles.offerCard}
                 >
                   {offer.image_url && (
-                    <Image 
-                      source={{ uri: offer.image_url }} 
+                    <FastImageLoader 
+                      uri={offer.image_url} 
                       style={styles.offerImage}
+                      contentFit="cover"
+                      width={250}
+                      height={150}
+                      priority="high"
                     />
                   )}
                   <View style={styles.offerContent}>
@@ -293,9 +322,14 @@ export default function OffersScreen() {
                       })}
                       activeOpacity={0.8}
                     >
-                      <Image 
-                        source={{ uri: product.image_urls?.[0] || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=200&q=80' }} 
-                        style={styles.productImage} 
+                      <FastImageLoader 
+                        uri={product.image_urls?.[0] || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=200&q=80'} 
+                        style={styles.productImage}
+                        contentFit="cover"
+                        width={120}
+                        height={120}
+                        priority="normal"
+                        quality={80}
                       />
                       {product.discount && product.discount > 0 && (
                         <View style={styles.discountBadge}>

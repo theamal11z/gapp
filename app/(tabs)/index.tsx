@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, Image, TouchableOpacity, StyleSheet, ImageBackground, Dimensions, RefreshControl } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, ImageBackground, Dimensions, RefreshControl } from 'react-native';
+import FastImageLoader from '@/components/FastImageLoader';
 import { Search, Bell, ChevronRight, MapPin, Truck, Star, Clock, Bookmark, TrendingUp, ChevronDown } from 'lucide-react-native';
 import { useProducts } from '@/hooks/useProducts';
 import { useCategories } from '@/hooks/useCategories';
@@ -154,9 +155,10 @@ export default function HomeScreen() {
         onPress={() => router.push('/offers')}
       >
         <ImageBackground
-          source={{ uri: 'https://images.unsplash.com/photo-1553546895-531931aa1aa8?w=600&q=80' }}
+          source={{ uri: 'https://images.unsplash.com/photo-1553546895-531931aa1aa8?w=600&q=60' }}
           style={styles.bannerImage}
           imageStyle={{ borderRadius: 16 }}
+          resizeMode="cover"
         >
           <View style={styles.bannerContent}>
             <Animated.View>
@@ -213,9 +215,13 @@ export default function HomeScreen() {
                   params: { categoryId: category.id }
                 })}
               >
-                <Image 
-                  source={{ uri: category.image_url || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=200&q=80' }} 
-                  style={styles.categoryImage} 
+                <FastImageLoader 
+                  uri={category.image_url || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=200&q=80'} 
+                  style={styles.categoryImage}
+                  contentFit="cover"
+                  width={80}
+                  height={80}
+                  priority="high"
                 />
                 <Text style={styles.categoryName}>{category.name}</Text>
               </TouchableOpacity>
@@ -252,9 +258,13 @@ export default function HomeScreen() {
                     params: { id: deal.id }
                   })}
                 >
-                  <Image 
-                    source={{ uri: deal.image_urls[0] || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=200&q=80' }} 
-                    style={styles.dealImage} 
+                  <FastImageLoader 
+                    uri={deal.image_urls[0] || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=200&q=80'} 
+                    style={styles.dealImage}
+                    contentFit="cover"
+                    width={130}
+                    height={130}
+                    priority="high"
                   />
                   {deal.discount && deal.discount > 0 && (
                     <View style={styles.discountBadge}>
@@ -301,9 +311,13 @@ export default function HomeScreen() {
                   params: { id: product.id }
                 })}
               >
-                <Image 
-                  source={{ uri: product.image_urls[0] || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=200&q=80' }} 
-                  style={styles.productImage} 
+                <FastImageLoader 
+                  uri={product.image_urls[0] || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=200&q=80'} 
+                  style={styles.productImage}
+                  contentFit="cover"
+                  width={160}
+                  height={160}
+                  priority="high"
                 />
                 <View style={styles.productDetails}>
                   <Text style={styles.productName} numberOfLines={1}>{product.name}</Text>
@@ -345,9 +359,14 @@ export default function HomeScreen() {
                   params: { id: product.id }
                 })}
               >
-                <Image 
-                  source={{ uri: product.image_urls[0] || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=200&q=80' }} 
-                  style={styles.gridImage} 
+                <FastImageLoader 
+                  uri={product.image_urls[0] || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=200&q=80'} 
+                  style={styles.gridImage}
+                  contentFit="cover"
+                  width={140}
+                  height={140}
+                  priority="normal"
+                  quality={75}
                 />
                 <View style={styles.gridDetails}>
                   <Text style={styles.gridName} numberOfLines={1}>{product.name}</Text>

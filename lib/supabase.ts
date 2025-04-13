@@ -1,11 +1,20 @@
 import 'react-native-url-polyfill/auto';
 import { createClient } from '@supabase/supabase-js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
 
-// Initialize the Supabase client
+// Initialize the Supabase client with AsyncStorage for session persistence
 export const supabase = createClient(
   Constants.expoConfig?.extra?.supabaseUrl || process.env.EXPO_PUBLIC_SUPABASE_URL!,
-  Constants.expoConfig?.extra?.supabaseAnonKey || process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!
+  Constants.expoConfig?.extra?.supabaseAnonKey || process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!,
+  {
+    auth: {
+      storage: AsyncStorage,
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: false
+    }
+  }
 );
 
 // Types for database tables
@@ -32,6 +41,7 @@ export type Product = {
   discount?: number;
   rating?: number;
   review_count?: number;
+  nutrition?: Record<string, string | number>;
   created_at: string;
 };
 

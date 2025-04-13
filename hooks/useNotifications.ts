@@ -1,6 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/hooks/useAuth';
+import { useContext } from 'react';
+import { NotificationContext } from './NotificationContext';
+import * as PushNotifications from '@/lib/pushNotifications';
 
 export type Notification = {
   id: string;
@@ -20,12 +23,15 @@ const DEFAULT_RETENTION_DAYS = 30;
 const DEFAULT_PAGE_SIZE = 15;
 
 export function useNotifications(retentionDays = DEFAULT_RETENTION_DAYS, pageSize = DEFAULT_PAGE_SIZE) {
+  // Try to use the notification context first if available
+  const notificationContext = useContext(NotificationContext);
   const { user } = useAuth();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [unreadCount, setUnreadCount] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  const [expoPushToken, setExpoPushToken] = useState<string | null>(null);
   
   // Refs to track pagination
   const pageRef = useRef(0);
@@ -264,12 +270,29 @@ export function useNotifications(retentionDays = DEFAULT_RETENTION_DAYS, pageSiz
     return fetchNotifications(true);
   }, [fetchNotifications]);
 
-  // Initial data loading
+  // Initial data loading and push notification setup
   useEffect(() => {
     if (user) {
       fetchNotifications(true);
+      
+      // Register for push notifications if not already done through context
+      if (!notificationContext) {
+        const setupPushNotifications = async () => {
+          try {
+            const token = await PushNotifications.registerForPushNotifications();
+            if (token) {
+              setExpoPushToken(token);
+              await PushNotifications.savePushToken(user.id, token);
+            }
+          } catch (err) {
+            console.error('Failed to setup push notifications:', err);
+          }
+        };
+        
+        setupPushNotifications();
+      }
     }
-  }, [user, fetchNotifications]);
+  }, [user, fetchNotifications, notificationContext]);
 
   // Subscribe to real-time notifications
   useEffect(() => {
@@ -298,6 +321,34 @@ export function useNotifications(retentionDays = DEFAULT_RETENTION_DAYS, pageSiz
     };
   }, [user, fetchNotifications]);
 
+  // If notification context is available, use it for push notification features
+  if (notificationContext) {
+    return {
+      ...notificationContext,
+      notifications,
+      loading,
+      error,
+      unreadCount,
+      hasMore,
+      markAsRead,
+      markAllAsRead,
+      deleteNotification,
+      deleteOldNotifications,
+      loadMore,
+      refresh,
+      // Convenience method to send a notification
+      sendNotification: async (title: string, body: string, data?: any) => {
+        // If the context has sendPushNotification, use it
+        if (typeof notificationContext.sendPushNotification === 'function') {
+          return notificationContext.sendPushNotification(title, body, data);
+        }
+        
+        // Fall back to local notification
+        return PushNotifications.sendLocalPushNotification({ title, body, data });
+      }
+    };
+  }
+  
   return {
     notifications,
     loading,
@@ -309,6 +360,26 @@ export function useNotifications(retentionDays = DEFAULT_RETENTION_DAYS, pageSiz
     deleteNotification,
     deleteOldNotifications,
     loadMore,
-    refresh
+    refresh,
+    expoPushToken,
+    // Standalone fallback for sending notifications
+    sendNotification: async (title: string, body: string, data?: any) => {
+      await PushNotifications.sendLocalPushNotification({ title, body, data });
+      
+      // Also save to database if user is logged in
+      if (user) {
+        try {
+          await supabase.from('notifications').insert({
+            user_id: user.id,
+            title,
+            message: body,
+            type: (data && data.type) || 'system',
+            read: false
+          });
+        } catch (err) {
+          console.error('Failed to save notification to database:', err);
+        }
+      }
+    }
   };
 } 

@@ -3,16 +3,17 @@ import {
   View,
   Text,
   ScrollView,
-  Image,
   TouchableOpacity,
   StyleSheet,
   Dimensions,
   SafeAreaView,
   ActivityIndicator,
   Platform,
-  Animated,
+  Animated as RNAnimated,
   RefreshControl
 } from 'react-native';
+import FastImageLoader from '@/components/FastImageLoader';
+import { preloadImages } from '@/utils/imageOptimizer';
 import { useLocalSearchParams, router } from 'expo-router';
 import { ChevronLeft, Heart, ShoppingBag, Star, Share2, Minus, Plus, Clock, CheckCircle, AlertTriangle } from 'lucide-react-native';
 import { supabase } from '@/lib/supabase';
@@ -32,17 +33,17 @@ const sanitizeString = (value: any): string => {
 
 // Skeleton loading component
 const SkeletonPlaceholder = ({ style }: { style: any }) => {
-  const opacityValue = useState(new Animated.Value(0.3))[0];
+  const opacityValue = useState(new RNAnimated.Value(0.3))[0];
 
   useEffect(() => {
-    const animation = Animated.loop(
-      Animated.sequence([
-        Animated.timing(opacityValue, {
+    const animation = RNAnimated.loop(
+      RNAnimated.sequence([
+        RNAnimated.timing(opacityValue, {
           toValue: 0.6,
           duration: 800,
           useNativeDriver: true,
         }),
-        Animated.timing(opacityValue, {
+        RNAnimated.timing(opacityValue, {
           toValue: 0.3,
           duration: 800,
           useNativeDriver: true,
@@ -54,7 +55,7 @@ const SkeletonPlaceholder = ({ style }: { style: any }) => {
   }, []);
 
   return (
-    <Animated.View style={[style, { opacity: opacityValue, backgroundColor: '#E0E0E0', borderRadius: 4 }]} />
+    <RNAnimated.View style={[style, { opacity: opacityValue, backgroundColor: '#E0E0E0', borderRadius: 4 }]} />
   );
 };
 
@@ -267,6 +268,22 @@ export default function ProductDetail() {
     fetchProductData();
   }, [fetchProductData]);
 
+  // Preload images when product data is available
+  useEffect(() => {
+    if (product?.image_urls && Array.isArray(product.image_urls)) {
+      // Preload all product images
+      preloadImages(product.image_urls);
+      
+      // Also preload related product images if available
+      if (relatedProducts && relatedProducts.length > 0) {
+        const relatedImages = relatedProducts
+          .map(p => p.image_urls?.[0])
+          .filter(Boolean) as string[];
+        preloadImages(relatedImages);
+      }
+    }
+  }, [product, relatedProducts]);
+
   // Handle refresh
   const handleRefresh = useCallback(() => {
     setRefreshing(true);
@@ -278,10 +295,14 @@ export default function ProductDetail() {
     if (!product?.image_urls || !Array.isArray(product.image_urls) || product.image_urls.length === 0) {
       return (
         <View style={styles.imageContainer}>
-          <Image 
-            source={{ uri: 'https://via.placeholder.com/400x300/f0f0f0/999999?text=No+Image' }} 
-            style={styles.productImage} 
-            resizeMode="cover" 
+          <FastImageLoader
+            uri={'https://via.placeholder.com/400x300/f0f0f0/999999?text=No+Image'}
+            style={styles.productImage}
+            contentFit="cover"
+            width={width}
+            height={width}
+            priority="high"
+            showLoader={true}
           />
         </View>
       );
@@ -301,10 +322,14 @@ export default function ProductDetail() {
           scrollEventThrottle={16}>
           {product.image_urls.map((image: string, index: number) => (
             <View key={index} style={{ width, height: width }}>
-        <Image 
-                source={{ uri: image || 'https://via.placeholder.com/400' }}
-          style={styles.productImage}
-          resizeMode="cover"
+        <FastImageLoader
+                uri={image || 'https://via.placeholder.com/400'}
+                style={styles.productImage}
+                contentFit="cover"
+                width={width}
+                height={width}
+                priority="high"
+                showLoader={false}
         />
             </View>
           ))}
@@ -378,10 +403,14 @@ export default function ProductDetail() {
                   params: { id: relatedProduct.id }
                 });
               }}>
-              <Image 
-                source={{ uri: relatedProduct.image_urls?.[0] || 'https://via.placeholder.com/150' }}
+              <FastImageLoader
+                uri={relatedProduct.image_urls?.[0] || 'https://via.placeholder.com/150'}
                 style={styles.relatedProductImage}
-                resizeMode="cover"
+                contentFit="cover"
+                width={150}
+                height={150}
+                priority="normal"
+                quality={70}
               />
               <Text style={styles.relatedProductName} numberOfLines={2}>
                 {sanitizeString(relatedProduct.name)}
@@ -480,7 +509,7 @@ export default function ProductDetail() {
 
           <View style={styles.priceRow}>
             <Text style={styles.price}>₹{sanitizeString(product.price || 0)}</Text>
-            {product.discount > 0 && (
+            {product.discount !== undefined && product.discount > 0 && (
               <View style={styles.discountBadge}>
                 <Text style={styles.discountText}>{sanitizeString(product.discount)}% OFF</Text>
               </View>

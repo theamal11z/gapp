@@ -98,9 +98,10 @@ export default function PopularProductsScreen() {
                 >
                   <Image 
                     source={{ uri: product.image_urls[0] || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=200&q=80' }} 
-                    style={styles.productImage} 
+                    style={styles.productImage}
+                    resizeMode="cover"
                   />
-                  {product.discount !== null && product.discount > 0 && (
+                  {product.discount !== null && product.discount !== undefined && product.discount > 0 && (
                     <View style={styles.discountBadge}>
                       <Text style={styles.discountText}>{product.discount}% OFF</Text>
                     </View>

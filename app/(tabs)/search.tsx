@@ -5,13 +5,14 @@ import {
   TextInput, 
   ScrollView, 
   TouchableOpacity, 
-  Image, 
   StyleSheet, 
   Dimensions,
   ActivityIndicator,
   RefreshControl,
   StatusBar
 } from 'react-native';
+import FastImageLoader from '@/components/FastImageLoader';
+import { preloadImages } from '@/utils/imageOptimizer';
 import { 
   Search as SearchIcon, 
   X, 
@@ -265,9 +266,13 @@ export default function SearchScreen() {
                 }}
               >
                 {category.image_url && (
-                  <Image 
-                    source={{ uri: category.image_url }} 
+                  <FastImageLoader 
+                    uri={category.image_url} 
                     style={styles.categoryImage}
+                    contentFit="cover"
+                    width={60}
+                    height={60}
+                    priority="high"
                   />
                 )}
                 <Text style={[
@@ -298,9 +303,13 @@ export default function SearchScreen() {
                 
                 {filteredProducts.length === 0 ? (
                   <View style={styles.emptyResults}>
-                    <Image 
-                      source={{ uri: 'https://illustrations.popsy.co/amber/no-results.svg' }} 
+                    <FastImageLoader 
+                      uri={'https://illustrations.popsy.co/amber/no-results.svg'} 
                       style={styles.emptyResultsImage}
+                      contentFit="contain"
+                      width={200}
+                      height={200}
+                      priority="high"
                     />
                     <Text style={styles.emptyResultsTitle}>No results found</Text>
                     <Text style={styles.emptyResultsText}>
@@ -330,9 +339,13 @@ export default function SearchScreen() {
                             });
                           }}
                         >
-                          <Image
-                            source={{ uri: product.image_urls[0] || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=200&q=80' }}
+                          <FastImageLoader
+                            uri={product.image_urls[0] || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=200&q=80'}
                             style={styles.productImage}
+                            contentFit="cover"
+                            width={120}
+                            height={120}
+                            priority="normal"
                           />
                           {product.discount && product.discount > 0 && (
                             <View style={styles.discountBadge}>
@@ -442,9 +455,13 @@ export default function SearchScreen() {
                             });
                           }}
                         >
-                          <Image
-                            source={{ uri: product.image_urls[0] || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=200&q=80' }}
+                          <FastImageLoader
+                            uri={product.image_urls[0] || 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=200&q=80'}
                             style={styles.productImage}
+                            contentFit="cover"
+                            width={120}
+                            height={120}
+                            priority="normal"
                           />
                           {product.discount && product.discount > 0 && (
                             <View style={styles.discountBadge}>
@@ -752,7 +769,6 @@ const styles = StyleSheet.create({
   productImage: {
     width: '100%',
     height: 150,
-    resizeMode: 'cover',
   },
   discountBadge: {
     position: 'absolute',

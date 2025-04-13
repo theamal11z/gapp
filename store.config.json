@@ -1,0 +1,27 @@
+{
+  "android": {
+    "googlePlay": {
+      "contact": {
+        "email": "support@groceryguj.com",
+        "phone": "+91 1234567890",
+        "website": "https://groceryguj.com"
+      },
+      "mainStore": {
+        "fullDescription": "GroceryGuj is your one-stop solution for all grocery needs. We provide fresh fruits, vegetables, dairy products, and household essentials delivered right to your doorstep. With an intuitive interface, secure payments, and timely deliveries, shopping for groceries has never been easier!\n\nFeatures:\n• Browse through a wide range of products categorized for easy navigation\n• Secure checkout with multiple payment options\n• Real-time order tracking\n• Save favorite items for quick reordering\n• Get notifications about order status and special offers\n• Create and manage shopping lists\n\nWhy choose GroceryGuj:\n• Fresh products sourced directly from farmers and trusted suppliers\n• Contactless delivery options\n• Competitive pricing\n• Excellent customer service\n• Regular discounts and promotions\n\nDownload GroceryGuj today and experience hassle-free grocery shopping!",
+        "shortDescription": "Your one-stop solution for grocery delivery with fresh products and easy ordering.",
+        "title": "GroceryGuj - Grocery Delivery App",
+        "video": null
+      },
+      "privacy": {
+        "privacyPolicyUrl": "https://groceryguj.com/privacy"
+      },
+      "store": {
+        "category": "SHOPPING",
+        "contentRating": "EVERYONE",
+        "contactEmail": "support@groceryguj.com",
+        "contactPhone": "+91 1234567890",
+        "contactWebsite": "https://groceryguj.com"
+      }
+    }
+  }
+}

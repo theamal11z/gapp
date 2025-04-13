@@ -10,7 +10,7 @@ import {
   ActivityIndicator,
   RefreshControl,
   Platform,
-  Image,
+  // Removing Image import as we use OptimizedImage
   Alert,
   FlatList
 } from 'react-native';
@@ -46,6 +46,7 @@ import { ErrorMessage } from '@/components/ErrorMessage';
 import { formatDistanceToNow, parseISO, format, isToday, isYesterday, addDays } from 'date-fns';
 import { useAddresses } from '@/hooks/useAddresses';
 import { supabase } from '@/lib/supabase';
+import OptimizedImage from '@/components/OptimizedImage';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import type { Order, OrderItem, Product } from '@/lib/supabase';
@@ -923,9 +924,11 @@ export default function OrderTrackingScreen() {
                   >
                     <View style={styles.orderItemImageContainer}>
                       {item.product?.image_urls?.[0] ? (
-                        <Image
+                        <OptimizedImage
                           source={{ uri: item.product.image_urls[0] }}
                           style={styles.orderItemImage}
+                          contentFit="cover"
+                          priority="high"
                         />
                       ) : (
                         <View style={styles.orderItemPlaceholder}>

@@ -13,18 +13,30 @@
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": [
-      "**/*"
+      "**/*",
+      "!**/offline.png"
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.groceryguj.app"
+      "bundleIdentifier": "com.groceryguj.app",
+      "newArchEnabled": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.groceryguj.app"
+      "package": "com.groceryguj.app",
+      "newArchEnabled": true,
+      "versionCode": 1,
+      "permissions": [
+        "NOTIFICATIONS",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "CAMERA"
+      ],
+      "softwareKeyboardLayoutMode": "pan",
+      "allowBackup": true
     },
     "web": {
       "bundler": "metro",
@@ -32,7 +44,14 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/notification-icon.png",
+          "color": "#ffffff"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
@@ -40,6 +59,9 @@
     "extra": {
       "router": {
         "origin": false
+      },
+      "eas": {
+        "projectId": "e5cc6764-5f39-4915-a542-addf3d203474"
       }
     }
   }
