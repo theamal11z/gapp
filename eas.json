@@ -8,8 +8,8 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_SUPABASE_URL": "https://nbfyrfmkcopnsjkjiffh.supabase.co",
-        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5iZnlyZm1rY29wbnNqa2ppZmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM0OTQ1OTEsImV4cCI6MjA1OTA3MDU5MX0.FHk4n9HQ18z07Xo_0gHqAXo_qVkITcSIDn5BrXTngFE"
+        "EXPO_PUBLIC_SUPABASE_URL": "https://wsvawqqyvcpjmtekhzhz.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndzdmF3cXF5dmNwam10ZWtoemh6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ1NTQ1MDYsImV4cCI6MjA2MDEzMDUwNn0.cOkU8_aWa_66cuQiFgX-dFmXFS5K8JNRgI2xE6EUSck"
       }
     },
     "preview": {
@@ -20,8 +20,8 @@
         "withoutCredentials": true
       },
       "env": {
-        "EXPO_PUBLIC_SUPABASE_URL": "https://nbfyrfmkcopnsjkjiffh.supabase.co",
-        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5iZnlyZm1rY29wbnNqa2ppZmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM0OTQ1OTEsImV4cCI6MjA1OTA3MDU5MX0.FHk4n9HQ18z07Xo_0gHqAXo_qVkITcSIDn5BrXTngFE"
+        "EXPO_PUBLIC_SUPABASE_URL": "https://wsvawqqyvcpjmtekhzhz.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndzdmF3cXF5dmNwam10ZWtoemh6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ1NTQ1MDYsImV4cCI6MjA2MDEzMDUwNn0.cOkU8_aWa_66cuQiFgX-dFmXFS5K8JNRgI2xE6EUSck"
       }
     },
     "production": {
@@ -31,8 +31,8 @@
         "image": "ubuntu-22.04-jdk-11-ndk-r21e"
       },
       "env": {
-        "EXPO_PUBLIC_SUPABASE_URL": "https://nbfyrfmkcopnsjkjiffh.supabase.co",
-        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5iZnlyZm1rY29wbnNqa2ppZmZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM0OTQ1OTEsImV4cCI6MjA1OTA3MDU5MX0.FHk4n9HQ18z07Xo_0gHqAXo_qVkITcSIDn5BrXTngFE"
+        "EXPO_PUBLIC_SUPABASE_URL": "https://wsvawqqyvcpjmtekhzhz.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndzdmF3cXF5dmNwam10ZWtoemh6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ1NTQ1MDYsImV4cCI6MjA2MDEzMDUwNn0.cOkU8_aWa_66cuQiFgX-dFmXFS5K8JNRgI2xE6EUSck"
       },
       "autoIncrement": true
     }
@@ -40,4 +40,4 @@
   "submit": {
     "production": {}
   }
-} 
+}

@@ -10,13 +10,13 @@ const config = require('./app.json');
 // Add the extra fields
 const expoConfig = {
   ...config.expo,
-  owner: "theamal11qf",
+  owner: "theamal11q1",
   extra: {
     ...config.expo.extra,
     supabaseUrl: SUPABASE_URL,
     supabaseAnonKey: SUPABASE_ANON_KEY,
     eas: {
-      projectId: "e5cc6764-5f39-4915-a542-addf3d203474"
+      projectId: "14094419-d37e-42a2-b7e4-25f6bdfc8109"
     },
   },
 };

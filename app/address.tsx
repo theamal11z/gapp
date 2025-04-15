@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, TextInput, StyleSheet, Alert } from 'react-native';
 import { router } from 'expo-router';
 import { ChevronLeft, MapPin, Plus, Chrome as Home, Briefcase, CreditCard as Edit2, Trash2 } from 'lucide-react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
@@ -27,38 +27,53 @@ export default function AddressScreen() {
 
   const handleAddAddress = async () => {
     try {
-      await addAddress({
+      // Validate required fields
+      if (!newAddress.address || !newAddress.area) {
+        Alert.alert('Error', 'Please fill in all required fields');
+        return;
+      }
+
+      const result = await addAddress({
         type: newAddress.type,
         address: newAddress.address,
         area: newAddress.area,
         city: newAddress.city,
         is_default: addresses.length === 0, // Make first address default
       });
-      setIsAdding(false);
-      setNewAddress({
-        type: 'Home',
-        address: '',
-        area: '',
-        city: 'Birgunj',
-      });
-    } catch (err) {
       
+      if (result) {
+        Alert.alert('Success', 'Address added successfully');
+        setIsAdding(false);
+        setNewAddress({
+          type: 'Home',
+          address: '',
+          area: '',
+          city: 'Birgunj',
+        });
+      }
+    } catch (err) {
+      console.error('Error adding address:', err);
+      Alert.alert('Error', 'Failed to add address. Please try again.');
     }
   };
 
   const handleDeleteAddress = async (id: string) => {
     try {
       await deleteAddress(id);
+      Alert.alert('Success', 'Address removed successfully');
     } catch (err) {
-      
+      console.error('Error deleting address:', err);
+      Alert.alert('Error', 'Failed to delete address. Please try again.');
     }
   };
 
   const handleSetDefault = async (id: string) => {
     try {
       await setDefaultAddress(id);
+      Alert.alert('Success', 'Default address updated');
     } catch (err) {
-      
+      console.error('Error setting default address:', err);
+      Alert.alert('Error', 'Failed to set default address. Please try again.');
     }
   };
 

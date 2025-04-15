@@ -28,7 +28,6 @@
       },
       "package": "com.groceryguj.app",
       "newArchEnabled": true,
-      "versionCode": 1,
       "permissions": [
         "NOTIFICATIONS",
         "READ_EXTERNAL_STORAGE",
@@ -60,9 +59,7 @@
       "router": {
         "origin": false
       },
-      "eas": {
-        "projectId": "e5cc6764-5f39-4915-a542-addf3d203474"
-      }
+      "eas": {}
     }
   }
 }

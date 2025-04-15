@@ -111,6 +111,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          data: options?.data || {}
+        }
       });
 
       if (signUpError) {
@@ -122,14 +125,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         throw new Error('No user data returned from signup');
       }
 
-      // After successful signup, update the user metadata separately
-      if (options?.data?.full_name) {
-        const { error: updateError } = await supabase.auth.updateUser({
-          data: { full_name: options.data.full_name }
-        });
-        
-        if (updateError) {
-          console.error('Error updating user profile:', updateError);
+      // Update profile in profiles table if user is created
+      if (signUpData.user && options?.data?.full_name) {
+        try {
+          const { error: profileError } = await supabase
+            .from('profiles')
+            .upsert({
+              id: signUpData.user.id,
+              email: signUpData.user.email,
+              full_name: options.data.full_name,
+            }, { onConflict: 'id' });
+            
+          if (profileError) {
+            console.error('Error creating profile:', profileError);
+            // Non-blocking - we continue even if profile creation fails
+          }
+        } catch (profileErr) {
+          console.error('Error updating user profile:', profileErr);
           // Non-blocking - we continue even if profile update fails
         }
       }

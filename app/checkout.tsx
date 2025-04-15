@@ -367,15 +367,11 @@ export default function CheckoutScreen() {
         if (Platform.OS === 'android') {
           ToastAndroid.show(`Coupon "${couponResult.code || ''}" applied successfully!`, ToastAndroid.SHORT);
         }
-      } else {
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-        setCouponError('Invalid coupon code or coupon has expired');
-        setIsCouponValid(false);
       }
     } catch (err) {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       
-      // Handle minimum purchase requirement error more prominently
+      // Handle different error cases with specific messages
       if (err instanceof Error) {
         const errorMessage = err.message;
         
@@ -387,6 +383,18 @@ export default function CheckoutScreen() {
           
           setCouponError(`This coupon requires a minimum purchase of ₹${minAmount}. Add ₹${shortfall.toFixed(2)} more to your cart.`);
           setErrors(prev => ({ ...prev, coupon: `Minimum purchase of ₹${minAmount} required` }));
+        } else if (errorMessage.includes('expired')) {
+          setCouponError('This coupon has expired');
+          setErrors(prev => ({ ...prev, coupon: 'This coupon has expired' }));
+        } else if (errorMessage.includes('usage limit')) {
+          setCouponError('This coupon has reached its usage limit');
+          setErrors(prev => ({ ...prev, coupon: 'This coupon has reached its usage limit' }));
+        } else if (errorMessage.includes('already used this coupon')) {
+          setCouponError('You have already used this coupon');
+          setErrors(prev => ({ ...prev, coupon: 'You have already used this coupon' }));
+        } else if (errorMessage.includes('Invalid coupon')) {
+          setCouponError('Invalid coupon code. Please check and try again.');
+          setErrors(prev => ({ ...prev, coupon: 'Invalid coupon code' }));
         } else {
           setCouponError(errorMessage);
           setErrors(prev => ({ ...prev, coupon: errorMessage }));
@@ -400,7 +408,7 @@ export default function CheckoutScreen() {
     } finally {
       setIsApplyingCoupon(false);
     }
-  }, [couponCode, subtotal, applyCoupon]);
+  }, [couponCode, applyCoupon, subtotal]);
 
   // Remove coupon with optimistic UI update
   const handleRemoveCoupon = useCallback(() => {

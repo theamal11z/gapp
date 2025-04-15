@@ -7,6 +7,16 @@ export type CartItemWithProduct = CartItem & {
   product: Product;
 };
 
+// Define Coupon type
+export interface Coupon {
+  id: string;
+  code: string;
+  discount: number | string;
+  description?: string;
+  min_purchase_amount?: number;
+  max_discount_amount?: number;
+}
+
 interface CartContextType {
   cartItems: CartItemWithProduct[];
   loading: boolean;
@@ -16,7 +26,10 @@ interface CartContextType {
   updateCartItemQuantity: (cartItemId: string, quantity: number) => Promise<boolean>;
   removeFromCart: (cartItemId: string) => Promise<boolean>;
   clearCart: () => Promise<boolean>;
-  getCartTotals: () => { subtotal: number; itemCount: number };
+  getCartTotals: () => { subtotal: number; itemCount: number; discountAmount: number; discountedSubtotal: number };
+  appliedCoupon: Coupon | null;
+  applyCoupon: (code: string) => Promise<Coupon | null>;
+  removeCoupon: () => void;
 }
 
 // Export the context so it can be imported directly if needed
@@ -28,6 +41,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [subscription, setSubscription] = useState<any>(null);
+  const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
 
   // Fetch cart items with product details
   const fetchCartItems = useCallback(async () => {
@@ -244,11 +258,93 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       0
     );
     
+    // Calculate discount if a coupon is applied
+    let discountAmount = 0;
+    let discountedSubtotal = subtotal;
+    
+    if (appliedCoupon) {
+      if (typeof appliedCoupon.discount === 'number') {
+        // Percentage discount
+        discountAmount = (subtotal * appliedCoupon.discount) / 100;
+        
+        // Apply max discount cap if it exists
+        if (appliedCoupon.max_discount_amount && discountAmount > appliedCoupon.max_discount_amount) {
+          discountAmount = appliedCoupon.max_discount_amount;
+        }
+      } else if (typeof appliedCoupon.discount === 'string') {
+        // Fixed amount discount
+        const fixedDiscount = parseFloat(appliedCoupon.discount);
+        if (!isNaN(fixedDiscount)) {
+          discountAmount = fixedDiscount;
+        }
+      }
+      
+      discountedSubtotal = subtotal - discountAmount;
+    }
+    
     return {
       subtotal,
-      itemCount
+      itemCount,
+      discountAmount,
+      discountedSubtotal
     };
-  }, [cartItems]);
+  }, [cartItems, appliedCoupon]);
+
+  // Apply coupon code
+  const applyCoupon = useCallback(async (code: string): Promise<Coupon | null> => {
+    if (!user || !code.trim()) return null;
+    
+    try {
+      // Use the RPC function to check if coupon is valid for this user
+      const { data: validationResult, error: validationError } = await supabase
+        .rpc('is_coupon_valid_for_user', {
+          p_coupon_code: code.trim(),
+          p_user_id: user.id
+        });
+      
+      if (validationError) throw validationError;
+      
+      // If coupon is not valid, throw the error with the reason
+      if (!validationResult.valid) {
+        throw new Error(validationResult.message || 'Invalid coupon code');
+      }
+      
+      // Extract the offer data from the validation result
+      const offerData = validationResult.offer;
+      
+      // Check if coupon has minimum purchase requirement
+      if (offerData.min_purchase_amount) {
+        const { subtotal } = getCartTotals();
+        if (subtotal < offerData.min_purchase_amount) {
+          throw new Error(`Minimum purchase of ₹${offerData.min_purchase_amount} required to use this coupon`);
+        }
+      }
+      
+      // Format the coupon data to match our Coupon interface
+      const formattedCoupon: Coupon = {
+        id: offerData.id,
+        code: offerData.code,
+        discount: offerData.coupon_type === 'percent' ? 
+          parseFloat(offerData.discount.replace(/[^0-9.]/g, '')) : 
+          offerData.discount,
+        description: offerData.description,
+        min_purchase_amount: offerData.min_purchase_amount,
+        max_discount_amount: offerData.max_discount_amount
+      };
+      
+      // Apply the coupon
+      setAppliedCoupon(formattedCoupon);
+      return formattedCoupon;
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Failed to apply coupon'));
+      throw err; // Re-throw to allow the caller to handle specific error messages
+    }
+  }, [user, getCartTotals]);
+  
+  // Remove applied coupon
+  const removeCoupon = useCallback(() => {
+    setAppliedCoupon(null);
+  }, []);
 
   // Set up real-time subscription to cart changes
   useEffect(() => {
@@ -296,6 +392,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     removeFromCart,
     clearCart,
     getCartTotals,
+    appliedCoupon,
+    applyCoupon,
+    removeCoupon,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
@@ -308,4 +407,4 @@ export function useCart() {
     throw new Error('useCart must be used within a CartProvider');
   }
   return context;
-} 
+}
