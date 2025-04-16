@@ -6,6 +6,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StyleSheet } from 'react-native';
 import { NetworkProvider } from '@/components/NetworkProvider';
 import { NotificationProvider } from '@/hooks/NotificationContext';
+import { PermissionsProvider } from '@/hooks/PermissionsContext';
 import * as Notifications from 'expo-notifications';
 
 interface ProvidersProps {
@@ -28,13 +29,15 @@ export default function Providers({ children }: ProvidersProps) {
     <GestureHandlerRootView style={styles.container}>
       <NetworkProvider>
         <AuthProvider>
-          <NotificationProvider>
-            <WishlistProvider>
-              <CartProvider>
-                {children}
-              </CartProvider>
-            </WishlistProvider>
-          </NotificationProvider>
+          <PermissionsProvider>
+            <NotificationProvider>
+              <WishlistProvider>
+                <CartProvider>
+                  {children}
+                </CartProvider>
+              </WishlistProvider>
+            </NotificationProvider>
+          </PermissionsProvider>
         </AuthProvider>
       </NetworkProvider>
     </GestureHandlerRootView>
