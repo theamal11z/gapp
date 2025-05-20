@@ -1,10 +1,17 @@
-# GroceryGuj App
+# hamro kitana
 
 A mobile grocery delivery application built with React Native and Expo, using Supabase for backend services.
 
 ## Features
 
 - User authentication with session persistence
+
+## Contact & Support
+
+- **Phone:** +9779820761411
+- **WhatsApp:** +977982076141
+- **Email:** hamrokiranastore@gmail.com
+
 - Product browsing by categories
 - Search functionality
 - Shopping cart management

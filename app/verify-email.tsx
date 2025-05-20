@@ -1,7 +1,10 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Link, Stack } from 'expo-router';
 import { Mail, ChevronLeft } from 'lucide-react-native';
 import { StatusBar } from 'expo-status-bar';
+import { useState } from 'react';
+import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/hooks/useAuth';
 
 // Define colors directly since we don't have access to the Colors constant
 const COLORS = {
@@ -10,6 +13,37 @@ const COLORS = {
 };
 
 export default function VerifyEmailScreen() {
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleResend = async () => {
+    setLoading(true);
+    setMessage(null);
+    setError(null);
+    try {
+      if (!user?.email) {
+        setError('No user email found.');
+        setLoading(false);
+        return;
+      }
+      const { error: resendError } = await supabase.auth.resend({
+        type: 'signup',
+        email: user.email,
+      });
+      if (resendError) {
+        setError(resendError.message);
+      } else {
+        setMessage('Verification email resent! Please check your inbox.');
+      }
+    } catch (err: any) {
+      setError('Failed to resend verification email.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
@@ -39,8 +73,20 @@ export default function VerifyEmailScreen() {
         <Text style={styles.note}>
           If you don't see the email, check your spam folder or try again.
         </Text>
-        
+        {message && (
+          <Text style={[styles.note, { color: 'green' }]}>{message}</Text>
+        )}
+        {error && (
+          <Text style={[styles.note, { color: 'red' }]}>{error}</Text>
+        )}
         <View style={styles.buttonsContainer}>
+          <TouchableOpacity style={[styles.button, loading && { opacity: 0.7 }]} onPress={handleResend} disabled={loading}>
+            {loading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.buttonText}>Resend Verification Email</Text>
+            )}
+          </TouchableOpacity>
           <Link href="/auth" asChild>
             <TouchableOpacity style={styles.button}>
               <Text style={styles.buttonText}>Return to Login</Text>

@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "GroceryGuj",
-    "slug": "bolt-expo-nativewind",
+    "name": "hamro kitana",
+    "slug": "hamro-kitana",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "groceryguj",
+    "scheme": "hamrokitana",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "jsEngine": "hermes",
@@ -19,7 +19,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.theamal11qw.groceryguj",
+      "bundleIdentifier": "com.theamal11qw.hamrokitana",
       "buildNumber": "1",
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "We need access to your photo library to let you upload profile pictures and product images."
@@ -30,7 +30,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.theamal11qw.groceryguj",
+      "package": "com.theamal11qw.hamrokitana",
       "versionCode": 1,
       "permissions": [
         "android.permission.READ_EXTERNAL_STORAGE"
@@ -58,6 +58,9 @@
       "typedRoutes": true
     },
     "extra": {
+      "supportPhone": "+9779820761411",
+      "supportWhatsApp": "+977982076141",
+      "supportEmail": "hamrokiranastore@gmail.com",
       "router": {
         "origin": false
       },

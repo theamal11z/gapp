@@ -89,6 +89,12 @@ export function SupportRequestForm({ onClose, onSuccess }: SupportRequestFormPro
       >
         <Animated.View entering={FadeIn.duration(300)}>
           <Text style={styles.title}>Contact Support</Text>
+          <View style={styles.contactInfoBox}>
+            <Text style={styles.contactInfoTitle}>Official Contact Information</Text>
+            <Text style={styles.contactInfoText}>Phone: <Text selectable style={styles.contactInfoHighlight}>+9779820761411</Text></Text>
+            <Text style={styles.contactInfoText}>WhatsApp: <Text selectable style={styles.contactInfoHighlight}>+977982076141</Text></Text>
+            <Text style={styles.contactInfoText}>Email: <Text selectable style={styles.contactInfoHighlight}>hamrokiranastore@gmail.com</Text></Text>
+          </View>
           <Text style={styles.subtitle}>
             Please provide details about your issue and we'll get back to you as soon as possible.
           </Text>
@@ -200,6 +206,30 @@ export function SupportRequestForm({ onClose, onSuccess }: SupportRequestFormPro
 }
 
 const styles = StyleSheet.create({
+  contactInfoBox: {
+    backgroundColor: '#e3f2fd',
+    borderRadius: 10,
+    padding: 14,
+    marginBottom: 14,
+    borderWidth: 1,
+    borderColor: '#90caf9',
+  },
+  contactInfoTitle: {
+    fontFamily: 'Poppins-SemiBold',
+    fontSize: 15,
+    color: '#1565c0',
+    marginBottom: 4,
+  },
+  contactInfoText: {
+    fontFamily: 'Poppins-Regular',
+    fontSize: 14,
+    color: '#333',
+    marginBottom: 2,
+  },
+  contactInfoHighlight: {
+    color: '#2196f3',
+    fontFamily: 'Poppins-SemiBold',
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',

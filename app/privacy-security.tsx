@@ -147,15 +147,14 @@ export default function PrivacySecurityScreen() {
 
         {/* Contact for Privacy Concerns */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Privacy Concerns?</Text>
+          <Text style={styles.sectionTitle}>Contact for Privacy & Security</Text>
           <View style={styles.contactCard}>
             <Text style={styles.contactText}>
-              If you have any questions or concerns about your privacy or our data practices, please contact our Privacy Team at:
+              For any questions or concerns about your privacy, security, or data practices, please contact us via:
             </Text>
-            <Text style={styles.contactEmail}>privacy@yourcompany.com</Text>
-            <TouchableOpacity style={styles.contactButton}>
-              <Text style={styles.contactButtonText}>Contact Privacy Team</Text>
-            </TouchableOpacity>
+            <Text style={styles.contactInfoText}>Phone: <Text selectable style={styles.contactInfoHighlight}>+9779820761411</Text></Text>
+            <Text style={styles.contactInfoText}>WhatsApp: <Text selectable style={styles.contactInfoHighlight}>+977982076141</Text></Text>
+            <Text style={styles.contactInfoText}>Email: <Text selectable style={styles.contactInfoHighlight}>hamrokiranastore@gmail.com</Text></Text>
           </View>
         </View>
       </ScrollView>
@@ -164,6 +163,16 @@ export default function PrivacySecurityScreen() {
 }
 
 const styles = StyleSheet.create({
+  contactInfoText: {
+    fontFamily: 'Poppins-Regular',
+    fontSize: 14,
+    color: '#333',
+    marginBottom: 2,
+  },
+  contactInfoHighlight: {
+    color: '#2196f3',
+    fontFamily: 'Poppins-SemiBold',
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',
