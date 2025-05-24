@@ -6,6 +6,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StyleSheet } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { disableReanimatedLayoutAnimations } from '@/utils/disableLayoutAnimations';
+import { setupDeepLinkHandlers } from '@/lib/deepLinkHandler';
 
 // Disable layout animations immediately on import
 disableReanimatedLayoutAnimations();
@@ -18,6 +19,9 @@ export default function Providers({ children }: ProvidersProps) {
   // Ensure layout animations are disabled on component mount as well
   useEffect(() => {
     disableReanimatedLayoutAnimations();
+    
+    // Initialize deep link handlers for Supabase auth
+    setupDeepLinkHandlers();
   }, []);
 
   return (

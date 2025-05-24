@@ -43,6 +43,10 @@ export default function RootLayout() {
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />
         <Stack.Screen name="auth" />
+        <Stack.Screen name="auth/callback" />
+        <Stack.Screen name="verify-email" />
+        <Stack.Screen name="privacy-policy" />
+        <Stack.Screen name="web-auth-callback" />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="cart" />
         <Stack.Screen name="checkout" />

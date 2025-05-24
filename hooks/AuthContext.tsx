@@ -55,11 +55,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     options?: { 
       data?: { 
         full_name?: string;
-      } 
+      },
+      redirectTo?: string;
     }
   ) => {
     try {
       setError(null);
+      
+      // Set up redirect URL for email confirmation
+      // Use web domain for better compatibility with email clients
+      const redirectTo = options?.redirectTo || 'https://grocery-gunj.vercel.app/auth/callback';
       
       // Sign up the user
       const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
@@ -69,11 +74,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           data: {
             full_name: options?.data?.full_name || null,
           },
+          emailRedirectTo: redirectTo,
         },
       });
 
       if (signUpError) {
-        
         throw signUpError;
       }
 
@@ -91,7 +96,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // If we have a session (email confirmation not required), proceed normally
       router.replace('/(tabs)');
     } catch (err) {
-      
       setError(err as AuthError);
       throw err;
     }

@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "GroceryGuj",
-    "slug": "bolt-expo-nativewind",
+    "name": "GroceryGunj",
+    "slug": "grocerygunj",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "groceryguj",
+    "scheme": "grocerygunj",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "jsEngine": "hermes",
@@ -19,7 +19,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.theamal11qw.groceryguj",
+      "bundleIdentifier": "com.theamal_11.grocerygunj",
       "buildNumber": "1",
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "We need access to your photo library to let you upload profile pictures and product images."
@@ -30,7 +30,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.theamal11qw.groceryguj",
+      "package": "com.theamal_11.grocerygunj",
       "versionCode": 1,
       "permissions": [
         "android.permission.READ_EXTERNAL_STORAGE"
@@ -38,7 +38,29 @@
       "softwareKeyboardLayoutMode": "pan",
       "proguard": {
         "config": "./android/app/proguard-rules.pro"
-      }
+      },
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=com.theamal_11.grocerygunj",
+      "privacyPolicyUrl": "https://grocery-gunj.vercel.app/privacy-policy",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "grocery-gunj.vercel.app",
+              "pathPrefix": "/auth/callback"
+            },
+            {
+              "scheme": "grocerygunj"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        }
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -62,7 +84,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "600ee78d-6dee-45ef-ac27-ec73bf65311c"
+        "projectId": "c61c7bb0-ee53-4fef-a2e3-a4a6ad363dfe"
       }
     },
     "updates": {
@@ -72,6 +94,6 @@
     "runtimeVersion": {
       "policy": "sdkVersion"
     },
-    "owner": "theamal11qw"
+    "owner": "theamal_11"
   }
 }
